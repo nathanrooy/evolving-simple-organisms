@@ -79,9 +79,7 @@ def calc_heading(org, food):
 
 def plot_frame(settings, organisms, foods, gen, time):
     fig, ax = plt.subplots()
-
     fig.set_size_inches(9.6, 5.4)
-    
                         
     plt.xlim([settings['x_min'] + settings['x_min'] * 0.25, settings['x_max'] + settings['x_max'] * 0.25])
     plt.ylim([settings['y_min'] + settings['y_min'] * 0.25, settings['y_max'] + settings['y_max'] * 0.25])
@@ -186,7 +184,6 @@ def simulate(settings, organisms, foods, gen):
         if settings['plot']==True and gen==settings['gens']-1:
             plot_frame(settings, organisms, foods, gen, t_step)
         
-
         # UPDATE FITNESS FUNCTION
         for food in foods:
             for org in organisms:
