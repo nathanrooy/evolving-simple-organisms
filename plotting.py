@@ -16,7 +16,6 @@ def plot_organism(x1, y1, theta, ax):
     edge = Circle([x1,y1], 0.05, facecolor='None', edgecolor = 'darkgreen', zorder=8)
     ax.add_artist(edge)
 
-
     tail_len = 0.075
     
     x2 = cos(radians(theta)) * tail_len + x1
