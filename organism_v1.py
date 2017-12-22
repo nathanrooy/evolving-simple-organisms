@@ -319,7 +319,7 @@ def run(settings):
 
         # EVOLVE
         organisms, stats = evolve(settings, organisms, gen)
-        print '>',gen,stats['BEST'],stats['AVG'],stats['WORST']
+        print '> GEN:',gen,'BEST:',stats['BEST'],'AVG:',stats['AVG'],'WORST:',stats['WORST']
 
     pass
 
