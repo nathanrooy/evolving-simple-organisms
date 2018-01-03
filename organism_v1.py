@@ -26,11 +26,11 @@ from math import cos
 from math import degrees
 from math import floor
 from math import radians
-from random import random
-from random import sample
-from random import randint
 from math import sin
 from math import sqrt
+from random import randint
+from random import random
+from random import sample
 from random import uniform
 
 #--- CONSTANTS ----------------------------------------------------------------+
@@ -51,8 +51,8 @@ settings['dr_max'] = 720        # max rotational speed      (degrees per second)
 settings['v_max'] = 0.5         # max velocity              (units per second)
 settings['dv_max'] =  0.25      # max acceleration (+/-)    (units per second^2)
 
-settings['x_min'] = -2.0        # arena eastern border
-settings['x_max'] =  2.0        # arena western border
+settings['x_min'] = -2.0        # arena western border
+settings['x_max'] =  2.0        # arena eastern border
 settings['y_min'] = -2.0        # arena southern border
 settings['y_max'] =  2.0        # arena northern border
 
