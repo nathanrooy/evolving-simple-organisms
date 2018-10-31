@@ -8,7 +8,7 @@
 
 #--- IMPORT DEPENDENCIES ------------------------------------------------------+
 
-from __future__ import division
+from __future__ import division, print_function
 from collections import defaultdict
 
 from matplotlib import pyplot as plt
@@ -319,7 +319,7 @@ def run(settings):
 
         # EVOLVE
         organisms, stats = evolve(settings, organisms, gen)
-        print '> GEN:',gen,'BEST:',stats['BEST'],'AVG:',stats['AVG'],'WORST:',stats['WORST']
+        print('> GEN:',gen,'BEST:',stats['BEST'],'AVG:',stats['AVG'],'WORST:',stats['WORST'])
 
     pass
 
