@@ -37,7 +37,7 @@ from random import uniform
 
 settings = {}
 
-# EVOLUTION SETTINGS 
+# EVOLUTION SETTINGS
 settings['pop_size'] = 50       # number of organisms
 settings['food_num'] = 100      # number of food particles
 settings['gens'] = 50           # number of generations
@@ -80,7 +80,7 @@ def calc_heading(org, food):
 def plot_frame(settings, organisms, foods, gen, time):
     fig, ax = plt.subplots()
     fig.set_size_inches(9.6, 5.4)
-                        
+
     plt.xlim([settings['x_min'] + settings['x_min'] * 0.25, settings['x_max'] + settings['x_max'] * 0.25])
     plt.ylim([settings['y_min'] + settings['y_min'] * 0.25, settings['y_max'] + settings['y_max'] * 0.25])
 
@@ -118,20 +118,20 @@ def evolve(settings, organisms_old, gen):
 
         if org.fitness < stats['WORST'] or stats['WORST'] == 0:
             stats['WORST'] = org.fitness
-            
+
         stats['SUM'] += org.fitness
         stats['COUNT'] += 1
 
     stats['AVG'] = stats['SUM'] / stats['COUNT']
-    
-    
+
+
     #--- ELITISM (KEEP BEST PERFORMING ORGANISMS) ---------+
     orgs_sorted = sorted(organisms_old, key=operator.attrgetter('fitness'), reverse=True)
     organisms_new = []
     for i in range(0, elitism_num):
         organisms_new.append(organism(settings, wih=orgs_sorted[i].wih, who=orgs_sorted[i].who, name=orgs_sorted[i].name))
 
-    
+
     #--- GENERATE NEW ORGANISMS ---------------------------+
     for w in range(0, new_orgs):
 
@@ -145,13 +145,13 @@ def evolve(settings, organisms_old, gen):
         crossover_weight = random()
         wih_new = (crossover_weight * org_1.wih) + ((1 - crossover_weight) * org_2.wih)
         who_new = (crossover_weight * org_1.who) + ((1 - crossover_weight) * org_2.who)
-        
+
         # MUTATION
         mutate = random()
         if mutate <= settings['mutate']:
 
             # PICK WHICH WEIGHT MATRIX TO MUTATE
-            mat_pick = randint(0,1)     
+            mat_pick = randint(0,1)
 
             # MUTATE: WIH WEIGHTS
             if mat_pick == 0:
@@ -159,7 +159,7 @@ def evolve(settings, organisms_old, gen):
                 wih_new[index_row] = wih_new[index_row] * uniform(0.9, 1.1)
                 if wih_new[index_row] >  1: wih_new[index_row] = 1
                 if wih_new[index_row] < -1: wih_new[index_row] = -1
-                
+
             # MUTATE: WHO WEIGHTS
             if mat_pick == 1:
                 index_row = randint(0,settings['onodes']-1)
@@ -167,23 +167,23 @@ def evolve(settings, organisms_old, gen):
                 who_new[index_row][index_col] = who_new[index_row][index_col] * uniform(0.9, 1.1)
                 if who_new[index_row][index_col] >  1: who_new[index_row][index_col] = 1
                 if who_new[index_row][index_col] < -1: who_new[index_row][index_col] = -1
-                    
+
         organisms_new.append(organism(settings, wih=wih_new, who=who_new, name='gen['+str(gen)+']-org['+str(w)+']'))
-                
+
     return organisms_new, stats
 
 
 def simulate(settings, organisms, foods, gen):
 
     total_time_steps = int(settings['gen_time'] / settings['dt'])
-    
+
     #--- CYCLE THROUGH EACH TIME STEP ---------------------+
     for t_step in range(0, total_time_steps, 1):
 
         # PLOT SIMULATION FRAME
         if settings['plot']==True and gen==settings['gens']-1:
             plot_frame(settings, organisms, foods, gen, t_step)
-        
+
         # UPDATE FITNESS FUNCTION
         for food in foods:
             for org in organisms:
@@ -201,7 +201,7 @@ def simulate(settings, organisms, foods, gen):
         # CALCULATE HEADING TO NEAREST FOOD SOURCE
         for food in foods:
             for org in organisms:
-                
+
                 # CALCULATE DISTANCE TO SELECTED FOOD PARTICLE
                 food_org_dist = dist(org.x, org.y, food.x, food.y)
 
@@ -241,7 +241,7 @@ class food():
 
 class organism():
     def __init__(self, settings, wih=None, who=None, name=None):
-        
+
         self.x = uniform(settings['x_min'], settings['x_max'])  # position (x)
         self.y = uniform(settings['y_min'], settings['y_max'])  # position (y)
 
@@ -257,8 +257,8 @@ class organism():
         self.who = who
 
         self.name = name
-        
-        
+
+
     # NEURAL NETWORK
     def think(self):
 
@@ -271,20 +271,20 @@ class organism():
         self.nn_dv = float(out[0])   # [-1, 1]  (accelerate=1, deaccelerate=-1)
         self.nn_dr = float(out[1])   # [-1, 1]  (left=1, right=-1)
 
-        
+
     # UPDATE HEADING
     def update_r(self, settings):
         self.r += self.nn_dr * settings['dr_max'] * settings['dt']
         self.r = self.r % 360
 
-        
+
     # UPDATE VELOCITY
     def update_vel(self, settings):
         self.v += self.nn_dv * settings['dv_max'] * settings['dt']
         if self.v < 0: self.v = 0
         if self.v > settings['v_max']: self.v = settings['v_max']
 
-    
+
     # UPDATE POSITION
     def update_pos(self, settings):
         dx = self.v * cos(radians(self.r)) * settings['dt']
@@ -308,12 +308,12 @@ def run(settings):
     for i in range(0,settings['pop_size']):
         wih_init = np.random.uniform(-1, 1, (settings['hnodes'], settings['inodes']))     # mlp weights (input -> hidden)
         who_init = np.random.uniform(-1, 1, (settings['onodes'], settings['hnodes']))     # mlp weights (hidden -> output)
-        
+
         organisms.append(organism(settings, wih_init, who_init, name='gen[x]-org['+str(i)+']'))
-    
+
     #--- CYCLE THROUGH EACH GENERATION --------------------+
     for gen in range(0, settings['gens']):
-        
+
         # SIMULATE
         organisms = simulate(settings, organisms, foods, gen)
 
@@ -327,5 +327,5 @@ def run(settings):
 #--- RUN ----------------------------------------------------------------------+
 
 run(settings)
-    
+
 #--- END ----------------------------------------------------------------------+
